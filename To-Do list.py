@@ -1,4 +1,4 @@
-schedule_dict = {}
+schedule_dict = {}                                 #main dictionary that stores data
 def add_event():
     date = input('Enter a date: ')
     time = input('Enter time: ')
@@ -27,14 +27,13 @@ def remove_event():
         event = input('Enter event to be removed: ')
         for i in schedule_dict[date].values():
             l = i
-        
-        if event in l:                             #date and event exist
-            l.remove(event)
-            print('Event has been removed\n')
 
+            if event in l:                             #date and event exist
+                l.remove(event)
+                print('Event has been removed\n')
+                return 0
         else:                                      #date exist, event doesn't exist
-            print('Event doesnt exist\n')
-        
+            print('Event doesnt exist\n')       
     else:
         print('Date doesnt exist\n')               #date doesn't exist
 
@@ -46,16 +45,16 @@ def rename_event():
         event = input('Enter name of event to be renamed: ')
         for i in schedule_dict[date].values():
             l = i
-        
+
         for i in range(len(l)):
             if event == l[i]:                      #event and date exist
                 rename = input('Enter a new name for event: ')
                 l[i] = rename
                 print("Event renamed succesfully\n")
                 return 0
+
             else:
                 print('Event doesnt exist\n')        #event doesnt exist
-
     else:
         print('Date doesnt exist\n')                 #date doesnt exist
 
@@ -64,13 +63,14 @@ def change_datetime():
     date_old = input('Enter the date of the event: ')
     if date_old in schedule_dict.keys():           
         event = input('Enter name of event to be changed: ')
+        
         for i in schedule_dict[date_old].values():
             l = i
 
         if event in l:
             l.remove(event)                        #removes existing event
         else:
-            print("Event doesnt exist")
+            print("Event doesnt exist\n")
             return 0
 
         date = input('Enter new date: ')
@@ -115,16 +115,16 @@ def print_event_of_date():
     else:
         print("date doesnt exist\n")
 
-def save_data():
+def save_data():                                    #writes the data into a .txt file
     with open('data.txt', 'w+') as f:
         f.write(str(schedule_dict))
-    print('data saved succesfully')
+    print('data saved succesfully\n')
 
-def load_data():
+def load_data():                                    #reads the data from the .txt file
     with open('data.txt', 'r') as f:
         global schedule_dict
         schedule_dict = eval(f.read())
-    print('data loaded succesfully')
+    print('data loaded succesfully\n')
 
 def main():
     run = True
