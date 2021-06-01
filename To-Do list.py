@@ -28,7 +28,7 @@ def remove_event():
         for i in schedule_dict[date].values():
             l = i
 
-            if event in l:                             #date and event exist
+            if event in l:                         #date and event exist
                 l.remove(event)
                 print('Event has been removed\n')
                 return 0
