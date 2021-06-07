@@ -1,3 +1,5 @@
+import json
+
 schedule_dict = {}                                 #main dictionary that stores data
 def add_event():
     date = input('Enter a date: ')
@@ -28,14 +30,18 @@ def remove_event():
         for i in schedule_dict[date].values():
             l = i
 
-            if event in l:                         #date and event exist
+            if event in l:                            #date and event exist
                 l.remove(event)
                 print('Event has been removed\n')
+
+                for i in schedule_dict[date].copy():  #removes the whole date, if no event exist
+                    if not schedule_dict[date][i]:    #after removing that earlier event
+                        schedule_dict[date].pop(i)                
                 return 0
-        else:                                      #date exist, event doesn't exist
+        else:                                      
             print('Event doesnt exist\n')       
     else:
-        print('Date doesnt exist\n')               #date doesn't exist
+        print('Date doesnt exist\n')               
 
 
 def rename_event():
@@ -63,20 +69,23 @@ def change_datetime():
     date_old = input('Enter the date of the event: ')
     if date_old in schedule_dict.keys():           
         event = input('Enter name of event to be changed: ')
-        
+
         for i in schedule_dict[date_old].values():
             l = i
 
         if event in l:
             l.remove(event)                        #removes existing event
+
+            for i in schedule_dict[date].copy():   #removes the whole date, if no event exist
+                    if not schedule_dict[date][i]: #after removing that earlier event
+                        schedule_dict[date].pop(i)   
         else:
             print("Event doesnt exist\n")
-            return 0
 
         date = input('Enter new date: ')
         time = input('Enter new time: ')
 
-        if date in schedule_dict.keys():            #Creats a new event with edited date/time when:
+        if date in schedule_dict.keys():            #Creats a new event with edited date/time when:        
             if time in schedule_dict[date].keys():  #both date and time already exist in dict
                 schedule_dict[date][time].append(event)
             else:                                   #date exist, time doesnt 
@@ -115,16 +124,30 @@ def print_event_of_date():
     else:
         print("date doesnt exist\n")
 
+def is_event_present():
+    event = input('Enter name of even to be checked: ')
+    for date in schedule_dict.keys():
+        for time in schedule_dict[date].values():
+            for i in time:
+                if i == event:
+                    print(event, '- Event is present on', date,'\n')
+                    return 0
+    else:
+        print('Event doesnt exist\n')
+        
+    
+
 def save_data():                                    #writes the data into a .txt file
-    with open('data.txt', 'w+') as f:
+    with open('To-Do List data.txt', 'w+') as f:
         f.write(str(schedule_dict))
     print('data saved succesfully\n')
 
 def load_data():                                    #reads the data from the .txt file
-    with open('data.txt', 'r') as f:
+    with open('To-Do List data.txt', 'r') as f:
         global schedule_dict
         schedule_dict = eval(f.read())
     print('data loaded succesfully\n')
+
 
 def main():
     run = True
@@ -136,15 +159,16 @@ def main():
             4. edit date/time of an event
             5. print all event
             6. print events of a specific day
-            7. save data into a .txt file
-            8. load data
+            7. to see if an event exist
+            8. save data into a .txt file
+            9. load data
         ''')
 
-    while run:
-        a = input('>> ')
+    while True:
+        a = input('>> Enter a command no: ')
 
         if a == '0':
-            run = False
+            break
         elif a == '1':
             add_event()
         elif a == '2':
@@ -158,12 +182,19 @@ def main():
         elif a == '6':
             print_event_of_date()
         elif a == '7':
-            save_data()
+            is_event_present()
         elif a == '8':
+            save_data()
+        elif a == '9':
             load_data()
         else:
             print('Wrong command')
             main()
 
-if __name__ == "__main__":
-    main()
+
+print('''
+                           To-Do list Program
+
+This program allows you to make events as a reminder for specific time of a day
+''')
+main()
